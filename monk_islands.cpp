@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int dp[104];
+int dp[MAX];
 
 int _shortestPath(int **edges, int n, int start, bool *isVisited)
 {
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 	cin >> t;
 	while (t--)
 	{
-		memset(dp, -1, sizeof(int) * 104);
+		memset(dp, -1, sizeof(int) * MAX);
 		int n,m;
 		cin >> n >> m;
 		int **edges = new int*[n]();

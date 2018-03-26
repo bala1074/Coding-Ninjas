@@ -33,6 +33,7 @@ vector<vector<int>> getConnected(vector<vector<int>> edges, int v, int e)
 		{
 			continue;
 		}
+		
 		vector<int>* component = new vector<int>();
 		if (!isVisited[i])
 		{
@@ -43,24 +44,6 @@ vector<vector<int>> getConnected(vector<vector<int>> edges, int v, int e)
 	}
 
 	return components;
-}
-
-bool sameComponent(int s, int e, vector<vector<int>> components)
-{
-	for (int i = 0; i < components.size(); ++i)
-	{
-		if (find(components[i].begin(), components[i].end(), s) != components[i].end())
-		{
-			if (find(components[i].begin(), components[i].end(), e) != components[i].end())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
 }
 
 int main(int argc, char const *argv[])
@@ -92,28 +75,38 @@ int main(int argc, char const *argv[])
 		}
 
 		vector<vector<int>> components = getConnected(edges, n, m);
+		vector<set<int>> componentsP;
+		vector<set<int>> componentsQ;
+		vector<int> tempP;
+		vector<int> tempQ;
 		bool flag = true;
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < components.size(); ++i)
 		{
-			if (p[i] != q[i])
+			for (int j = 0; j < components[i].size(); ++j)
 			{
-				int j = find(p, p+n, q[i]) - p;
-				if (!sameComponent(i+1, j+1, components))
+				tempP.push_back(p[components[i][j] - 1]);
+				tempQ.push_back(q[components[i][j] - 1]);
+			}
+			sort(tempP.begin(), tempP.end());
+			sort(tempQ.begin(), tempQ.end());
+			for (int k = 0; k < tempP.size(); ++k)
+			{
+				if (tempP[k] != tempQ[k])
 				{
-					cout << "NO" << endl;
 					flag = false;
 					break;
 				}
-				else
-				{
-					swap(p[i], p[j]);
-				}
+			}
+			if (!flag)
+			{
+				cout << "NO\n";
+				break;
 			}
 		}
 
 		if (flag)
 		{
-			cout << "YES" << endl;
+			cout << "YES\n";
 		}
 	}
 
