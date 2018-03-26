@@ -2,60 +2,97 @@
 
 using namespace std;
 
+struct Pos
+{
+	int x;
+	int y;
+};
+
+int dfs(Pos *pos, int start, bool *visited, int n, int m, int q)
+{
+	visited[start] = true;
+	vector<Pos> possible;
+	Pos curr;
+	curr.x = pos[start].x;
+	curr.y = pos[start].y;
+	int inc_x = 0;
+	int inc_y = 1;
+	int itr = 8;
+	while (itr--)
+	{
+		Pos temp;
+		temp.x = curr.x + (inc_x % 2) + 1;
+		temp.y = curr.y + (inc_y % 2) + 1;
+		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
+		{
+			possible.push_back(temp);
+		}
+		temp.x = curr.x - (inc_x % 2) + 1;
+		temp.y = curr.y - (inc_y % 2) + 1;
+		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
+		{
+			possible.push_back(temp);
+		}		
+		temp.x = curr.x + (inc_x % 2) + 1;
+		temp.y = curr.y - (inc_y % 2) + 1;
+		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
+		{
+			possible.push_back(temp);
+		}		
+		temp.x = curr.x - (inc_x % 2) + 1;
+		temp.y = curr.y + (inc_y % 2) + 1;
+		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
+		{
+			possible.push_back(temp);
+		}	
+	}
+
+	int count = 1;
+	for (int i = 0; i < q; ++i)
+	{
+		if (find(possible.begin(), possible.end(), pos[i]) != possible.end() and !visited[i])
+		{
+			visited[i] = true;
+			count += dfs(pos, i, visited, n, m, q);
+		}
+	}
+
+	return count;
+}
+
+int config(int *pos, int n, int m, int q)
+{
+	bool *visited = new bool[q]();
+	vector<int> counts;
+	for (int i = 0; i < q; ++i)
+	{
+		if (!visited[i])
+		{
+			int count = dfs(pos, i, visited, n, m, q);
+			counts.push_back(count);
+		}
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	int t;
 	cin >> t;
 	while (t--)
 	{
-		int n,m;
-		cin >> n >> m;
-		int **board = new int[n]();
-		for (int i = 0; i < n; ++i)
-		{
-			board[i] = new int[m]();
-			for (int j = 0; j < m; ++j)
-			{
-				board[i][j] = -1;
-			}
-		}
-		int q;
-		cin >> q;
+		int n,m,q;
+		cin >> n >> m >> q;
+		Pos *pos = new Pos[q]();
+
 		for (int i = 0; i < q; ++i)
 		{
 			int x,y;
 			cin >> x >> y;
-			board[x][y] = 0;
+			pos[q].x = x;
+			pos[q].y = y;
 		}
 
-		vector<int> components(q);
-		int serial = 1;
-		for (int i = 0; i < n; ++i)
-		{
-			for (int j = 0; j < m; ++j)
-			{
-				if (board[i][j] != -1)
-				{
-					int set;
-					if (board[i][j] == 0)
-					{
-						board[i][j] = serial;
-						set = serial;
-					}
-					else
-					{
-						set = board[i][j];
-					}
-					
-					int count = 0;
-					if (board[i+2][j+1] == 0)
-					{
-						board[i+2][j+1] = serial;
-						count++;
-					}
-				}
-			}
-		}
+		cout << config(pos, n, m, q);
 	}
 	return 0;
 }
