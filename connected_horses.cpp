@@ -17,7 +17,7 @@ int dfs(Pos *pos, int start, bool *visited, int n, int m, int q)
 	curr.y = pos[start].y;
 	int inc_x = 0;
 	int inc_y = 1;
-	int itr = 8;
+	int itr = 2;
 	while (itr--)
 	{
 		Pos temp;
@@ -27,19 +27,19 @@ int dfs(Pos *pos, int start, bool *visited, int n, int m, int q)
 		{
 			possible.push_back(temp);
 		}
-		temp.x = curr.x - (inc_x % 2) + 1;
-		temp.y = curr.y - (inc_y % 2) + 1;
+		temp.x = curr.x - (inc_x % 2) - 1;
+		temp.y = curr.y - (inc_y % 2) - 1;
 		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
 		{
 			possible.push_back(temp);
 		}		
 		temp.x = curr.x + (inc_x % 2) + 1;
-		temp.y = curr.y - (inc_y % 2) + 1;
+		temp.y = curr.y - (inc_y % 2) - 1;
 		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
 		{
 			possible.push_back(temp);
 		}		
-		temp.x = curr.x - (inc_x % 2) + 1;
+		temp.x = curr.x - (inc_x % 2) - 1;
 		temp.y = curr.y + (inc_y % 2) + 1;
 		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
 		{
@@ -50,7 +50,7 @@ int dfs(Pos *pos, int start, bool *visited, int n, int m, int q)
 	int count = 1;
 	for (int i = 0; i < q; ++i)
 	{
-		if (find(possible.begin(), possible.end(), pos[i]) != possible.end() and !visited[i])
+		if (!visited[i] and find(possible.begin(), possible.end(), pos[i]) != possible.end())
 		{
 			visited[i] = true;
 			count += dfs(pos, i, visited, n, m, q);
@@ -72,6 +72,14 @@ int config(int *pos, int n, int m, int q)
 			counts.push_back(count);
 		}
 	}
+
+	for (int i = 0; i < counts.size(); ++i)
+	{
+		cout << counts[i] << " ";
+	}
+	cout << endl;
+
+	return 0;
 }
 
 int main(int argc, char const *argv[])
