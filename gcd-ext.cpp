@@ -36,4 +36,4 @@ int main()
 	ans myAns = gcdExtended(a,b);
 	cout << myAns.x << endl << myAns.y << endl;
 	return 0;
-}
+}N
