@@ -1,85 +1,67 @@
 #include <bits/stdc++.h>
+#define MOD 1000000007
+#define pb push_back
+#define mp make_pair
 
 using namespace std;
+typedef long long ll;
 
-struct Pos
+void dfs(int **board, int x, int y, int &count, bool **visited, int n, int m)
 {
-	int x;
-	int y;
-};
-
-int dfs(Pos *pos, int start, bool *visited, int n, int m, int q)
-{
-	visited[start] = true;
-	vector<Pos> possible;
-	Pos curr;
-	curr.x = pos[start].x;
-	curr.y = pos[start].y;
-	int inc_x = 0;
-	int inc_y = 1;
-	int itr = 2;
-	while (itr--)
+	count++;
+	visited[x][y] = true;
+	vector< pair<int,int> > possible;
+	possible.pb(mp(x+2,y+1));
+	possible.pb(mp(x+2,y-1));
+	possible.pb(mp(x-2,y+1));
+	possible.pb(mp(x-2,y-1));
+	possible.pb(mp(x+1,y+2));
+	possible.pb(mp(x-1,y+2));
+	possible.pb(mp(x+1,y-2));
+	possible.pb(mp(x-1,y-2));
+	for (int i = 0; i < possible.size(); ++i)
 	{
-		Pos temp;
-		temp.x = curr.x + (inc_x % 2) + 1;
-		temp.y = curr.y + (inc_y % 2) + 1;
-		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
-		{
-			possible.push_back(temp);
-		}
-		temp.x = curr.x - (inc_x % 2) - 1;
-		temp.y = curr.y - (inc_y % 2) - 1;
-		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
-		{
-			possible.push_back(temp);
-		}		
-		temp.x = curr.x + (inc_x % 2) + 1;
-		temp.y = curr.y - (inc_y % 2) - 1;
-		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
-		{
-			possible.push_back(temp);
-		}		
-		temp.x = curr.x - (inc_x % 2) - 1;
-		temp.y = curr.y + (inc_y % 2) + 1;
-		if (temp.x < n and temp.y < m and temp.x > -1 and temp.y > -1)
-		{
-			possible.push_back(temp);
-		}	
-	}
+		int x1 = possible[i].first;
+		int y1 = possible[i].second;
 
-	int count = 1;
-	for (int i = 0; i < q; ++i)
-	{
-		if (!visited[i] and find(possible.begin(), possible.end(), pos[i]) != possible.end())
+		if ((x1 < n and x1 >= 0 and y1 < m and y1 >= 0) and !visited[x1][y1])
 		{
-			visited[i] = true;
-			count += dfs(pos, i, visited, n, m, q);
+			if (board[x1][y1])
+			{
+				dfs(board, x1, y1, count, visited, n, m);
+			}
 		}
 	}
-
-	return count;
 }
 
-int config(int *pos, int n, int m, int q)
+ll factorial(ll n)
 {
-	bool *visited = new bool[q]();
-	vector<int> counts;
-	for (int i = 0; i < q; ++i)
+	ll ans = 1;
+	for (ll i = 0; i < n; ++i)
 	{
-		if (!visited[i])
+		ans = (ans * (i+1)) % MOD;
+	}
+
+	return ans;
+}
+
+ll connected(int **board, int n, int m, bool **visited)
+{
+	ll ans = 1;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
 		{
-			int count = dfs(pos, i, visited, n, m, q);
-			counts.push_back(count);
+			if (!visited[i][j] and board[i][j])
+			{
+				int count = 0;
+				dfs(board, i, j, count, visited, n, m);
+				ans = (ans * factorial(count)) % MOD;
+			}
 		}
 	}
 
-	for (int i = 0; i < counts.size(); ++i)
-	{
-		cout << counts[i] << " ";
-	}
-	cout << endl;
-
-	return 0;
+	return ans;
 }
 
 int main(int argc, char const *argv[])
@@ -90,17 +72,22 @@ int main(int argc, char const *argv[])
 	{
 		int n,m,q;
 		cin >> n >> m >> q;
-		Pos *pos = new Pos[q]();
+		int **board = new int*[n]();
+		bool **visited = new bool*[n]();
+		for (int i = 0; i < n; ++i)
+		{
+			board[i] = new int[m]();
+			visited[i] = new bool[m]();
+		}
 
 		for (int i = 0; i < q; ++i)
 		{
 			int x,y;
 			cin >> x >> y;
-			pos[q].x = x;
-			pos[q].y = y;
+			board[x-1][y-1] = 1;
 		}
-
-		cout << config(pos, n, m, q);
+		
+		cout << connected(board, n, m, visited) << endl;
 	}
 	return 0;
 }
