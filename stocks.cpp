@@ -1,33 +1,54 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-typedef long long ll;
 
 int main(int argc, char const *argv[])
 {
-	ll n,m;
-	cin >> n >> m;
-	ll a,b;
-	cin >> a >> b;
-	ll *x = new ll[n];
-	ll *diff = new ll[n-1];
-	x[0] = 0;
-  	ll exp = ll(pow(2,32));
-  	ll reduce = ll(pow(2,8));
-  	for (int i = 1; i < n; ++i)
-  	{
-  		x[i] = (((a % exp) * (x[i-1] % m) % exp) % exp + b % exp) % exp;
-  		diff[i-1] = (x[i] - x[i-1]) / reduce;
-  	}
+	long n,m,a,b;
+	cin >> n >> m >> a >> b;
+	long *c = new long[n]();
+	long *x = new long[n]();
+	long const1 = long(pow(2,32));
+	long const2 = long(pow(2,8));
+	long buyPrice = 0;
+	long sellPrice = 0;
+	long totalProfit = 0;
+	bool selling = true;
+	for (int i = 1; i < n; ++i)
+	{
+		x[i] = ((x[i-1] % m)*a + b) % const1;
+		c[i] = x[i] / const2;
+		cout << x[i] << " " << c[i] << endl;
+		if (selling)
+		{
+			if (c[i] >= c[i-1])
+			{
+				sellPrice = c[i];
+				if (i == n-1)
+				{
+					totalProfit += c[i] - buyPrice;
+					break;
+				}
+			}
+			else
+			{
+				totalProfit += sellPrice - buyPrice;
+				selling = false;
+			}
+		}
+		else
+		{
+			if (c[i] <= c[i-1])
+			{
+				buyPrice = c[i];
+			}
+			else
+			{
+				selling = true;
+			}
+		}
+	}
 
-  	ll totalProfit = 0;
-  	for (int i = 0; i < n-1; ++i)
-  	{
-  		if (diff[i] > 0)
-  		{
-  			totalProfit += diff[i];
-  		}
-  	}
 	cout << totalProfit;
 	return 0;
 }

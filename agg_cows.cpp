@@ -25,7 +25,7 @@ bool check(long long positions[], int n, int c, int distance)
 	
 
 int main()
-{
+{	
 	int t;
 	cin >> t;
 	while(t--)
