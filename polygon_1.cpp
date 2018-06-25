@@ -1,10 +1,11 @@
 #include <bits/stdc++.h>
+
 using namespace std;
-typedef double d;
+typedef long double ld;
  
-double polygonArea(double *X, double *Y, int n)
+ld polygonArea(ld *X, ld *Y, int n)
 {
-    double area = 0.0;
+    ld area = 0.0;
  
     int j = n - 1;
     for (int i = 0; i < n; i++)
@@ -20,8 +21,8 @@ int main(int argc, char const *argv[])
 {
 	int n;
 	cin >> n;
-	d *x = new d[n]();
-	d *y = new d[n]();
+	ld *x = new ld[n]();
+	ld *y = new ld[n]();
 	for (int i = 0; i < n; ++i)
 	{
 		cin >> x[i];
@@ -31,8 +32,15 @@ int main(int argc, char const *argv[])
 		cin >> y[i];
 	}
 
-	//printf("%0.9f", polygonArea(x,y,n));
-  	cout << polygonArea(x,y,n);
+	ld ans = polygonArea(x,y,n);
+	if (ans == int(ans))
+	{
+		cout << ans << ".0";
+	}
+	else
+	{
+		cout << setprecision(9) << ans;
+	}
 
 	return 0;
 }

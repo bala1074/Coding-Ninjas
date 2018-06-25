@@ -42,8 +42,8 @@ int main(int argc, char const *argv[])
 
 		int minTime = INT_MAX;
 		int leaveTime = (wakeUp < storeOpen-r) ? storeOpen-r : wakeUp;
-		int retTime = (wakeUp < storeOpen-r) ? storeOpen+r+s : wakeUp+2*r+s;
-		if (retTime > inTime)
+		int retTime = leaveTime + 2*r + s;
+		if (retTime >= inTime)
 		{
 			cout << "-1\n";
 			continue;
@@ -53,28 +53,29 @@ int main(int argc, char const *argv[])
 		int finalIndex = -1;
 		for (int i = 0; i < n; ++i)
 		{
-			if ((leaveTime <= friends[i].start and retTime <= friends[i].start) or
-				(leaveTime >= friends[i].end and retTime >= friends[i].end))
+			if ((retTime < friends[i].start) or
+				(leaveTime > friends[i].end))
 			{
 				if (finalInTime > retTime)
 				{
 					finalInTime = retTime;
-					finalIndex = i;
+					finalIndex = i+1;
+					break;
 				}
 			}
 			else
 			{
 				int newLeaveTime = friends[i].end;
 				int newRetTime = newLeaveTime + 2*r + s;
-				if (newRetTime <= inTime and finalInTime > newRetTime)
+				if (newRetTime < inTime and finalInTime > newRetTime)
 				{
 					finalInTime = newRetTime;
-					finalIndex = i;
+					finalIndex = i+1;
 				}
 			}
 		}
 
-		cout << finalIndex+1 << endl;
+		cout << finalIndex << endl;
 	}
 	return 0;
 }

@@ -31,7 +31,8 @@ int main(int argc, char const *argv[])
 	ll totalCost = 0;
 	for (int i = 0; i < MAX; ++i)
 	{
-		if (left == 0)
+		left -= workers[currWorker].speed;
+		if (left <= 0)
 		{
 			break;
 		}
@@ -44,17 +45,17 @@ int main(int argc, char const *argv[])
 			}
 			else if (workers[i].speed > workers[currWorker].speed)
 			{
-				ll workDone = (i - currWorker) * workers[currWorker].speed;
-				left -= workDone;
-				if (left <= 0)
-				{
-					break;
-				}
-				else
-				{
+				// ll workDone = (i - currWorker) * workers[currWorker].speed;
+				// left -= workDone;
+				// if (left <= 0)
+				// {
+				// 	break;
+				// }
+				// else
+				// {
 					totalCost += workers[i].wage;
 					currWorker = i;
-				}
+				// }
 			}
 		}
 	}
