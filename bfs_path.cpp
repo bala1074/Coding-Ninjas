@@ -71,10 +71,10 @@ vector<int> BFS(int **edges, int v, int s, int e, bool *isVisited)
 			}
 		}
 
-		if (queue.back() == e)
-		{
-			break;
-		}
+		// if (queue.back() == e)
+		// {
+		// 	break;
+		// }
 	}
 
 	vector<int> path;

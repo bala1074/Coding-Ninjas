@@ -7,20 +7,6 @@ vector<int> qq;
 vector<vector<int>> edges(100005);
 bool isVisited[100005];
 
-void DFS(vector<vector<int>> edges, int start, bool *isVisited, int *p, int *q)
-{
-	isVisited[start] = true;
-	pp.push_back(p[start]);
-	qq.push_back(q[start]);
-	for (int i = 0; i < edges[start].size(); ++i)
-	{
-		if (!isVisited[edges[start][i]])
-		{
-			DFS(edges, edges[start][i], isVisited, p, q);
-		}
-	}
-}
-
 void BFS(int start, int *p, int *q)
 {
 	queue<int> que;

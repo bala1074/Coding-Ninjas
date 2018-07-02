@@ -6,7 +6,7 @@ using namespace std;
 class TrieNode
 {
 public:
-	int value;
+	int count = 0;
 	TrieNode *left;
 	TrieNode *right;
 
@@ -15,6 +15,7 @@ public:
 		TrieNode *curr = this;
 		for (int i = MAX; i >= 0; i--)
 		{
+			curr->count++;
 			int b = ((n >> i) & 1);
 
 			if (b == 0)
@@ -34,34 +35,75 @@ public:
 				curr = curr->right;
 			}
 		}
-		curr->value = n;
 	}
 };
 
 int query(TrieNode *root, int pre_xor, int k)
 {
-	if (root->left == NULL and root->right == NULL)
+	TrieNode *curr = root;
+	int finalCount = 0;
+	for (int i = MAX; i >= 0; i--)
 	{
-		cout << root->value << endl;
-		if (root->value < k)
+		int bit_k = ((k >> i) & 1);
+		int bit_p = ((pre_xor >> i) & 1);
+
+		if (bit_k == 0)
 		{
-			return 1;
+			if (bit_p == 0)
+			{
+				if (curr->left)
+				{
+					curr = curr->left;
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+			{
+				if (curr->right)
+				{
+					curr = curr->right;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			if (bit_p == 0)
+			{
+				finalCount += curr->left->count;
+				curr->left->count = 0;
+				if (curr->right)
+				{
+					curr = curr->right;
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+			{
+				finalCount += curr->right->count;
+				curr->right->count = 0;
+				if (curr->left)
+				{
+					curr = curr->left;
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 	}
 
-	int count = 0;
-	if (root->left)
-	{
-		// cout << "left\n";
-		count += query(root->left, k);
-	}
-	if (root->right)
-	{
-		// cout << "right\n";
-		count += query(root->right, k);
-	}
-
-	return count;
+	return finalCount;
 }
 
 int main(int argc, char const *argv[])
