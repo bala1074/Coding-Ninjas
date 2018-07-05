@@ -51,7 +51,7 @@ int main()
 		rem /= 10;
 	}
 	
-	string* output = new output[total];
+	string* output = new string[total];
 	
 	int count = keypad(num, output);
 	
